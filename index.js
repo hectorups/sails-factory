@@ -90,7 +90,7 @@ Factory.build = function(name) {
   if (!factory) throw new Error("'" + name + "' is undefined.");
 
   var attributes = evalAttrs(_.merge(_.clone(factory.attrs, true), attrs));
-  if (callback) callback(attributes);
+  if (callback) callback(null, attributes);
 };
 
 //------------------------------------------------------------------------------
@@ -117,10 +117,7 @@ Factory.create = function(name) {
   var attributes = evalAttrs(_.merge(_.clone(factory.attrs, true), attrs));
   var Model = sails.models[factory.modelName.toLowerCase()];
 
-  Model.create(attributes).done(function(err, record) {
-    if (err) throw new Error(util.inspect(err, {depth: null}));
-    if (callback) callback(record);
-  });
+  Model.create(attributes).exec(callback);
 };
 
 //------------------------------------------------------------------------------
